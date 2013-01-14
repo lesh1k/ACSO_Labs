@@ -21,17 +21,17 @@ void sched_add_task (void* func_ptr) {
   sched_save_state(task);
   initial_stack_ptr = (unsigned) task->stack + TASK_STACK_SIZE;
 
-  // set stack pointer of the task context to initial_stack_ptr
-  
+  /// set stack pointer of the task context to initial_stack_ptr
+  task->state[0].esp = initial_stack_ptr;
   // set instruction pointer of the task context to func_ptr
+  task->state[0].eip=func_ptr;
   // set status of the task as runnable
-
-  task->state[0].eflags = 0x200; //some magic for longjmp
-
+  task->status=1;
 
 void yield(void){
 
-
+// switch context from current task to next
+	sched_switch_context(current_task(),next_task());
 }
 
 void sched_run(void){
